@@ -1,0 +1,9 @@
+/Users/weilinzi/RustroverProjects/rust_namepace/thumbor/target/debug/deps/libproc_macro_hack-3fea5013bf392adc.dylib: /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/lib.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/quote.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/error.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/iter.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/parse.rs
+
+/Users/weilinzi/RustroverProjects/rust_namepace/thumbor/target/debug/deps/proc_macro_hack-3fea5013bf392adc.d: /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/lib.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/quote.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/error.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/iter.rs /Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/parse.rs
+
+/Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/lib.rs:
+/Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/quote.rs:
+/Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/error.rs:
+/Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/iter.rs:
+/Users/weilinzi/.cargo/registry/src/rsproxy.cn-8f6827c7555bfaf8/proc-macro-hack-0.5.20+deprecated/src/parse.rs:
