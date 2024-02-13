@@ -36,7 +36,7 @@ impl TryFrom<&str> for ImageSpec {
 impl filter::Filter{
     pub fn to_str (&self) -> Option<&'static str>{
         match self {
-            filter::Filter::Undefined => None,
+            filter::Filter::Unspecified => None,
             filter::Filter::Oceanic => Some("oceanic"),
             filter::Filter::Islands => Some("islands"),
             filter::Filter::Marine => Some("marine"),

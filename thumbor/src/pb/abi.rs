@@ -73,7 +73,7 @@ pub mod filter {
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Filter {
-        Undefined = 0,
+        Unspecified = 0,
         Oceanic = 1,
         Islands = 2,
         /// more: https://docs.rs/photon-rs/0.3.1/photon_rs/filters/fn.filter.html

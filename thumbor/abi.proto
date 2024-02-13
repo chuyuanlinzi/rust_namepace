@@ -52,7 +52,7 @@ message Contrast {
 // 处理滤镜
 message Filter {
     enum Filter {
-        UNDEFINED = 0;
+        UNSPECIFIED = 0;
         OCEANIC = 1;
         ISLANDS = 2;
         MARINE = 3;
