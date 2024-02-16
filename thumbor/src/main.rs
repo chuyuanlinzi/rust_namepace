@@ -73,7 +73,7 @@ async fn generate(
     Extension(cache): Extension<Cache>,
 )
     -> Result<(HeaderMap, Vec<u8>), StatusCode> {
-    let url = &percent_decode_str(&url).decode_utf8_lossy();
+    let url: &str = &percent_decode_str(&url).decode_utf8_lossy();
     let spec: ImageSpec = spec
         .as_str()
         .try_into()

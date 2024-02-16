@@ -103,9 +103,9 @@ pub mod spec {
         #[prost(message, tag="2")]
         Crop(super::Crop),
         #[prost(message, tag="3")]
-        Fliph(super::Fliph),
-        #[prost(message, tag="4")]
         Flipv(super::Flipv),
+        #[prost(message, tag="4")]
+        Fliph(super::Fliph),
         #[prost(message, tag="5")]
         Contrast(super::Contrast),
         #[prost(message, tag="6")]

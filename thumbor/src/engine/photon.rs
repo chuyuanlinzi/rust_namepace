@@ -8,7 +8,6 @@ use photon_rs::{
 };
 use std::convert::TryFrom;
 use lazy_static::lazy_static;
-use tracing_subscriber::fmt::format::Format;
 
 
 lazy_static! {
@@ -29,7 +28,7 @@ pub struct Photon(PhotonImage);
 impl TryFrom<Bytes> for Photon {
     type Error = anyhow::Error;
 
-    fn try_from(value: Bytes) -> std::result::Result<Self, Self::Error> {
+    fn try_from(value: Bytes) -> Result<Self, Self::Error> {
         Ok(Self(open_image_from_bytes(&value)?))
     }
 }
@@ -98,7 +97,7 @@ fn image_to_buf(img: PhotonImage, format: ImageOutputFormat) -> Vec<u8> {
     let height = img.get_height();
 
     let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
-    let dynimage = DynamicImage::ImageRgb8(img_buffer);
+    let dynimage = DynamicImage::ImageRgba8(img_buffer);
 
     let mut buffer = Vec::with_capacity(32768);
     dynimage.write_to(&mut buffer, format).unwrap();
