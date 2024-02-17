@@ -1,3 +1,4 @@
 /httpie/target/
 .idea
 /thumbor/target/
+/queryer/target/
