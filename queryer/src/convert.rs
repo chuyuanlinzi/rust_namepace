@@ -19,12 +19,19 @@ pub struct Sql<'a> {
 // 需要简单包装一下
 
 pub struct Expression(pub(crate) Box<SqlExpr>);
+
 pub struct Operation(pub(crate) SqlBinaryOperator);
+
 pub struct Projection<'a>(pub(crate) &'a SelectItem);
+
 pub struct Source<'a>(pub(crate) &'a [TableWithJoins]);
+
 pub struct Order<'a>(pub(crate) &'a OrderByExpr);
+
 pub struct Offset<'a>(pub(crate) &'a SqlOffset);
+
 pub struct Limit<'a>(pub(crate) &'a SqlExpr);
+
 pub struct Value(pub(crate) SqlValue);
 
 
@@ -34,7 +41,7 @@ impl<'a> TryFrom<&'a Statement> for Sql<'a> {
         match sql {
             // 目前我们只关心 query (select ... from ... where ...)
             Statement::Query(q) => {
-                let Select{
+                let Select {
                     from: table_with_joins,
                     selection: where_clause,
                     projection,
