@@ -2,15 +2,20 @@ extern crate core;
 
 use std::ops::{Deref, DerefMut};
 use polars::frame::DataFrame;
-use polars::prelude::CsvWriter;
-use anyhow::Result;
+use polars::prelude::{CsvWriter, IntoLazy};
+use anyhow::{anyhow, Result};
 use sqlparser::parser::Parser;
 use tracing::info;
+use tracing_subscriber::filter::filter_fn;
 use crate::convert::Sql;
 use crate::dialect::TyrDialect;
+use crate::fetcher::retrieve_data;
+use crate::loader::detect_content;
 
 mod dialect;
 mod convert;
+mod fetcher;
+mod loader;
 
 #[derive(Debug)]
 pub struct DataSet(DataFrame);
@@ -60,11 +65,25 @@ pub async fn query<T: AsRef<str>>(sql: T) -> Result<DataSet> {
         order_by,
     } = sql.try_into()?;
 
-    info!("retrieving data from source: {]", source);
+    info!("retrieving data from source: {}", source);
 
     // 从 source 读入一个 DataSet
-    // let ds = detect_content
+    let ds = detect_content(retrieve_data(source).await?).load()?;
 
+    let mut filtered = match condition {
+        Some(expr) => ds.0.lazy().filter(expr),
+        None => ds.0.lazy(),
+    };
+
+    filtered = order_by
+        .into_iter()
+        .fold(filtered, |acc, (col, desc)| acc.sort(&col, desc));
+
+    if offset.is_some() || limit.is_some() {
+        filtered = filtered.slice(offset.unwrap_or(0), limit.unwrap_or(usize::MAX));
+    }
+
+    Ok(DataSet(filtered.select(selection).collect()?))
 }
 
 
