@@ -1,5 +1,5 @@
 use std::fs;
-use anyhow::anyhow;
+use anyhow::{anyhow, Result};
 use async_trait::async_trait;
 
 // Rust 的 async trait 还没有稳定，可以用 async_trait 宏
@@ -10,7 +10,7 @@ pub trait Fetch{
 }
 
 pub async fn retrieve_data(source: impl AsRef<str>) -> Result<String> {
-    let name = source;
+    let name = source.as_ref();
     match &name[..4] {
         // 包括 http / https
         "http" => UrlFetcher(name).fetch().await,
@@ -32,6 +32,7 @@ impl<'a> Fetch for UrlFetcher<'a> {
     }
 }
 
+#[async_trait]
 impl<'a> Fetch for FileFetcher<'a> {
     type Error = anyhow::Error;
 

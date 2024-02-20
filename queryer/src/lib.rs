@@ -6,7 +6,6 @@ use polars::prelude::{CsvWriter, IntoLazy};
 use anyhow::{anyhow, Result};
 use sqlparser::parser::Parser;
 use tracing::info;
-use tracing_subscriber::filter::filter_fn;
 use crate::convert::Sql;
 use crate::dialect::TyrDialect;
 use crate::fetcher::retrieve_data;

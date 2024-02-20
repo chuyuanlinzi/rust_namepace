@@ -1,5 +1,6 @@
 use anyhow::{anyhow, Result};
 use polars::prelude::*;
+use polars::prelude::Expr::IsNull;
 use sqlparser::ast::{
     BinaryOperator as SqlBinaryOperator, Expr as SqlExpr, Offset as SqlOffset, OrderByExpr, Select,
     SelectItem, SetExpr, Statement, TableFactor, TableWithJoins, Value as SqlValue,
@@ -57,7 +58,7 @@ impl<'a> TryFrom<&'a Statement> for Sql<'a> {
 
                 let source = Source(table_with_joins).try_into()?;
 
-                let condition= match where_clause {
+                let condition = match where_clause {
                     Some(expr) => Some(Expression(Box::new(expr.to_owned())).try_into()?),
                     None => None
                 };
@@ -86,6 +87,93 @@ impl<'a> TryFrom<&'a Statement> for Sql<'a> {
                 })
             }
             _ => Err(anyhow!("We Only Support Select Query at the moment"))
+        }
+    }
+}
+
+impl TryFrom<Expression> for Expr {
+    type Error = anyhow::Error;
+
+    /// 把 SqlParser 的 Expr 转换成 DataFrame 的 Expr
+    fn try_from(expr: Expression) -> std::result::Result<Self, Self::Error> {
+        match *expr.0 {
+            SqlExpr::BinaryOp { left, op, right } => Ok(Expr::BinaryExpr {
+                left: Box::new(Expression(left).try_into()?),
+                op: Operation(op).try_into()?,
+                right: Box::new(Expression(right).try_into()?),
+            }),
+            SqlExpr::Wildcard => Ok(Self::Wildcard),
+            SqlExpr::IsNull(expr) => Ok(Self::IsNull(Box::new(Expression(expr).try_into()?))),
+            SqlExpr::IsNotNull(expr) => Ok(Self::IsNotNull(Box::new(Expression(expr).try_into()?))),
+            SqlExpr::Identifier(id) => Ok(Self::Column(Arc::new(id.value))),
+            SqlExpr::Value(v) => Ok(Self::Literal(Value(v).try_into()?)),
+            v => Err(anyhow!("expr {:#?} is not supported", v)),
+        }
+    }
+}
+
+/// 把 SqlParser 的 BinaryOperator 转换成 DataFrame 的 Operator
+impl TryFrom<Operation> for Operator {
+    type Error = anyhow::Error;
+
+    fn try_from(op: Operation) -> std::result::Result<Self, Self::Error> {
+        match op.0 {
+            SqlBinaryOperator::Plus => Ok(Self::Plus),
+            SqlBinaryOperator::Minus => Ok(Self::Minus),
+            SqlBinaryOperator::Multiply => Ok(Self::Multiply),
+            SqlBinaryOperator::Divide => Ok(Self::Divide),
+            SqlBinaryOperator::Modulo => Ok(Self::Modulus),
+            SqlBinaryOperator::Gt => Ok(Self::Gt),
+            SqlBinaryOperator::Lt => Ok(Self::Lt),
+            SqlBinaryOperator::GtEq => Ok(Self::GtEq),
+            SqlBinaryOperator::LtEq => Ok(Self::LtEq),
+            SqlBinaryOperator::Eq => Ok(Self::Eq),
+            SqlBinaryOperator::NotEq => Ok(Self::NotEq),
+            SqlBinaryOperator::And => Ok(Self::And),
+            SqlBinaryOperator::Or => Ok(Self::Or),
+            v => Err(anyhow!("Operator {} is not supported", v)),
+        }
+    }
+}
+
+/// 把 SqlParser 的 SelectItem 转换成 DataFrame 的 Expr
+impl<'a> TryFrom<Projection> for Expr{
+    type Error = anyhow::Error;
+
+    fn try_from(p: Projection) -> std::result::Result<Self, Self::Error> {
+        match p.0 {
+            SelectItem::UnnamedExpr(SqlExpr::Identifier(id)) => Ok(col(&id.to_string())),
+            SelectItem::ExprWithAlias {
+                expr: SqlExpr::Identifier(id),
+                alias,
+            } => Ok(Expr::Alias(
+               Box::new(Expr::Column(Arc::new(id.to_string()))),
+                Arc::new(alias.to_string()),
+            )),
+            SelectItem::QualifiedWildcard(v) => Ok(col(&v.to_string())),
+            SelectItem::Wildcard => Ok(col("*")),
+            item => Err(anyhow!("projection {} not supported", item))
+        }
+    }
+}
+
+
+impl<'a> TryFrom<Source<'a>> for &'a str {
+    type Error = anyhow::Error;
+
+    fn try_from(source: Source<'a>) -> std::result::Result<Self, Self::Error> {
+        if source.0.len() != 1 {
+            return Err(anyhow!("We only support single data source at the moment"));
+        }
+
+        let table = &source.0[0];
+        if !table.joins.is_empty() {
+            return Err(anyhow!("We do not support joins data source at the moment"));
+        }
+
+        match &table.relation {
+            TableFactor::Table {name, ..} => Ok(&name.0.first().unwrap().value),
+            _ => Err(anyhow!("We Only support table")),
         }
     }
 }
