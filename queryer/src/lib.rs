@@ -2,7 +2,7 @@ extern crate core;
 
 use std::ops::{Deref, DerefMut};
 use polars::frame::DataFrame;
-use polars::prelude::{CsvWriter, IntoLazy};
+use polars::prelude::*;
 use anyhow::{anyhow, Result};
 use sqlparser::parser::Parser;
 use tracing::info;

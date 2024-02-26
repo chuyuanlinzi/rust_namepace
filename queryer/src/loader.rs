@@ -1,6 +1,6 @@
 use std::io::Cursor;
 use anyhow::Result;
-use polars::prelude::CsvReader;
+use polars::prelude::*;
 use crate::DataSet;
 
 pub trait Load{
